@@ -36,23 +36,23 @@ public abstract class AggregateRoot implements IAggregateRoot {
 	}
 	
 	@Override
-	public void applyChange(Event event){
+	public void apply(Event event){
 		event._Id = id;
 		event.version = getNewEventVersion();
-		apply(event);
+		applyChange(event);
 		appliedChanges.add(event);
 		
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void apply(Event event){
+	private void applyChange(Event event){
 		try {
 			Method handler = registeredEvents.get(event.getClass());
 			if(handler == null){
 				throw new UnregisteredEventException("The requested domain event "+event.getClass().getName()+" is not registered !");
 			}
 			Class _class = handler.getDeclaringClass();
-			Event[] args = {event};
+			Object[] args = {event};
 			handler.invoke(_class.newInstance(), args);
 		}
 		catch (IllegalAccessException e) {e.printStackTrace();}
@@ -75,7 +75,7 @@ public abstract class AggregateRoot implements IAggregateRoot {
 	@Override
 	public void loadsFromHistory(List<Event> history) {
 		for (Event event : history) {
-			applyChange(event);
+			apply(event);
 		}
 	}
 	

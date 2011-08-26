@@ -2,6 +2,8 @@ package commands;
 
 import java.io.Serializable;
 
-public interface ICommand extends Serializable{
+import events.Message;
+
+public interface ICommand extends Serializable, Message{
 
 }

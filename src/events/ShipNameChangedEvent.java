@@ -6,7 +6,7 @@ import java.util.UUID;
 public class ShipNameChangedEvent extends Event {
 	public final String newName;
 	
-	public ShipNameChangedEvent(UUID id, int version, String newName) {
+	public ShipNameChangedEvent(UUID id, String newName) {
 		super(id);
 		this.newName = newName;
 	}

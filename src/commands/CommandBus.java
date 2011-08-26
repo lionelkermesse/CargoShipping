@@ -1,7 +1,8 @@
 package commands;
 
 import infrastructure.IBus;
+import infrastructure.MessageHandlerNotFoundException;
 
 public interface CommandBus extends IBus {
-	<T> void send(T command);
+	void send(ICommand command) throws MessageHandlerNotFoundException;
 }

@@ -11,6 +11,7 @@ import infrastructure.NonExistingShip;
 import infrastructure.PrivateAccessor;
 import events.ShipArrivalNotifiedEvent;
 import events.ShipDepartureNotifiedEvent;
+import events.ShipNameChangedEvent;
 
 import java.util.Date;
 import java.util.UUID;
@@ -54,8 +55,9 @@ public class Ship extends AggregateRoot{
 		}
 		
 		public void registerEvents() throws NoSuchMethodException, SecurityException{
-			registerEvent(ShipArrivalNotifiedEvent.class, PrivateAccessor.getPrivateMethod(this,"onNotifyShipArrival"));
-			registerEvent(ShipDepartureNotifiedEvent.class, PrivateAccessor.getPrivateMethod(this,"onNotifyShipDeparture"));
+			registerEvent(ShipNameChangedEvent.class, PrivateAccessor.getPrivateMethod(this,"onShipNameChanged"));
+			registerEvent(ShipArrivalNotifiedEvent.class, PrivateAccessor.getPrivateMethod(this,"onShipArrivalNotified"));
+			registerEvent(ShipDepartureNotifiedEvent.class, PrivateAccessor.getPrivateMethod(this,"onShipDepartureNotified"));
 		}
 		
 		private void isShipCreated(){
@@ -69,23 +71,31 @@ public class Ship extends AggregateRoot{
 		}
 		
 		//Events Creations
-		@SuppressWarnings("unused")
-		private void onNotifyShipArrival(UUID aggregateId, Date occured, Port fromPort){
+		public void changeName(String newName){
 			isShipCreated();
-			applyChange(new ShipArrivalNotifiedEvent(aggregateId, this.name, occured, this.cargo, fromPort));
+			apply(new ShipNameChangedEvent(this.id, newName));
 		}
-		@SuppressWarnings("unused")
-		private void onNotifyShipDeparture(UUID aggregateId,Date occured, Port toPort){
+		public void updateShipArrival(Date occured, Port fromPort){
 			isShipCreated();
-			applyChange(new ShipDepartureNotifiedEvent(aggregateId, this.name, occured, this.cargo, toPort));
+			apply(new ShipArrivalNotifiedEvent(this.id, this.name, occured, this.cargo, fromPort));
+		}
+		public void updateShipDeparture(Date occured, Port toPort){
+			isShipCreated();
+			apply(new ShipDepartureNotifiedEvent(this.id, this.name, occured, this.cargo, toPort));
 		}
 		
 		
 		//Events Executions
-		public void onShipArrivalNotified(ShipArrivalNotifiedEvent event){
+		@SuppressWarnings("unused")
+		private void onShipNameChanged(ShipNameChangedEvent event){
+			this.name = event.newName;
+		}
+		@SuppressWarnings("unused")
+		private void onShipArrivalNotified(ShipArrivalNotifiedEvent event){
 			this.port = event._FromPort;
 		}
-		public void onShipDepartureNotified(ShipDepartureNotifiedEvent event){
+		@SuppressWarnings("unused")
+		private void onShipDepartureNotified(ShipDepartureNotifiedEvent event){
 			this.port = event._ToPort;
 		}
 }

@@ -3,7 +3,7 @@ package events;
 import java.io.Serializable;
 import java.util.UUID;
 
-public interface IEvent extends Serializable{
+public interface IEvent extends Serializable, Message{
 	public UUID getId();
 	public UUID getAggregateId();
 	public void setAggregateId(UUID aggregateId);

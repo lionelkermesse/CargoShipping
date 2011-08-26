@@ -4,15 +4,15 @@ import java.util.UUID;
 
 @SuppressWarnings("serial")
 public class ChangeShipNameCommand implements ICommand {
-	UUID id;
-	String name;
+	UUID shipId;
+	String newName;
 	public ChangeShipNameCommand(UUID id, String name){
-		this.id = id;
-		this.name = name;
+		this.shipId = id;
+		this.newName = name;
 	}
 	
-	public UUID getId() {	return id;	}
-	public String getName() {return name;}
+	public UUID getShipId() {	return shipId;	}
+	public String getNewName() {return newName;}
 	
 	
 }

@@ -2,6 +2,7 @@ package domain;
 
 import infrastructure.AggregateNotFoundException;
 import infrastructure.ConcurrencyException;
+import infrastructure.MessageHandlerNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -34,6 +35,9 @@ public class EventStore implements IEventStore, IEventStoreUnitOfWork{
 			this.events.get(aggregateId).add(event);
 			this.eventsProvider.add(event);
 		}
+		
+		//Then We can commit allChanges throught out the bus
+		commit();
 	}
 
 	@Override
@@ -49,10 +53,12 @@ public class EventStore implements IEventStore, IEventStoreUnitOfWork{
 	
 	@Override
 	public void commit() {
-		for(Event event : this.eventsProvider){
-			this.eventBus.publish(event);
-		}
-		this.eventsProvider.clear();
+		try {
+			for(Event event : this.eventsProvider){
+				this.eventBus.publish(event);
+			}	
+			this.eventsProvider.clear();
+		} catch (MessageHandlerNotFoundException e) {e.printStackTrace();}
 	}
 
 	@Override

@@ -15,5 +15,4 @@ public class NewCargoCreatedEventHandler implements IEventHandler<NewCargoCreate
 		CargoReport cargo = new CargoReport(event.getAggregateId().toString(), event.getName());
 		reportingRepository.save(cargo);
 	}
-
 }

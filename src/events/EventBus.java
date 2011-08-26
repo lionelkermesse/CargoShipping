@@ -1,7 +1,8 @@
 package events;
 
 import infrastructure.IBus;
+import infrastructure.MessageHandlerNotFoundException;
 
 public interface EventBus extends IBus{
-	<T> void publish(T event);
+	public void publish(IEvent event) throws MessageHandlerNotFoundException;
 }

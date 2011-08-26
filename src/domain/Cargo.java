@@ -29,7 +29,7 @@ public class Cargo extends AggregateRoot {
 		public Cargo(String name) {
 			super(UUID.randomUUID());
 			this.name = name;
-			onCreateNewCargo(this.id, this.name);
+			newCargoCreated(this.id, this.name);
 		}
 		
 		@Override
@@ -40,6 +40,23 @@ public class Cargo extends AggregateRoot {
 			registerEvent(NewCargoCreatedEvent.class, PrivateAccessor.getPrivateMethod(this,"onNewCargoCreated"));
 		}
 		
+		//Events Creations
+		private void newCargoCreated(UUID aggregateId, String name){
+			apply(new  NewCargoCreatedEvent(aggregateId, name)); //We Create the relative Event
+		}
+		
+		//Events Executions
+		@SuppressWarnings("unused")
+		private void onNewCargoCreated(NewCargoCreatedEvent event){
+			this.id = event.getAggregateId();
+			this.name = event.getName();
+		}
+
+		public String getName() {return name;}
+		public void updateName(String name) {this.name = name;}
+		
+		
+		@SuppressWarnings("unused")
 		private void isCargoCreated(){
 			if(this.id == null){
 				try {
@@ -49,21 +66,5 @@ public class Cargo extends AggregateRoot {
 				}
 			}
 		}		
-		
-		//Events Creations
-		private void onCreateNewCargo(UUID aggregateId, String name){
-			isCargoCreated();
-			applyChange(new  NewCargoCreatedEvent(aggregateId, name)); //We Create the relative Event
-		}
-		
-		
-		//Events Executions
-		public void onNewCargoCreated(NewCargoCreatedEvent event){
-			this.id = event.getAggregateId();
-			this.name = event.getName();
-		}
-
-		public String getName() {return name;}
-		public void updateName(String name) {this.name = name;}
 		
 }

@@ -41,4 +41,8 @@ public class CargoReportingRepository implements IReportingRepository<CargoRepor
 		return null;
 	}
 
+	public List<CargoReport> getReportingDatabase() {
+		return db;
+	}
+
 }

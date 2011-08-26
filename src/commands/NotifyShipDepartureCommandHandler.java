@@ -29,7 +29,7 @@ import domain.ShipRepository;
  * @author Nelson Lionel KEMINSE
  * 5 ao�t 2011 12:28:48
  */
-public class NotifyShipDepartureCommandHandler{
+public class NotifyShipDepartureCommandHandler implements ICommandHandler<NotifyShipDepartureCommand>{
 	private IDomainRepository<Ship> domainRepository;
 	
 	public NotifyShipDepartureCommandHandler(ShipRepository repository) {
@@ -38,7 +38,6 @@ public class NotifyShipDepartureCommandHandler{
 
 	public void handles(NotifyShipDepartureCommand command) throws AggregateNotFoundException {
 		Ship ship = domainRepository.getById(command.getId());
-		ship.setPort(command.getToPort());
-		//repository.save(ship);
+		ship.updateShipDeparture(command.getOccured(), command.getToPort());
 	}
 }
