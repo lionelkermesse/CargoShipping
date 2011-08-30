@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="createCargoCmdHandler" class="com.linkcorp.dddcqrs.commands.CreateNewCargoCommandHandler">
+		<constructor-arg>
+			<bean class="com.linkcorp.dddcqrs.domain.CargoDomainRepository"/>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="cargoRepository" class="com.linkcorp.dddcqrs.domain.CargoDomainRepository"/>
+	
+	<bean id="eventStore" class="com.linkcorp.dddcqrs.domain.EventStore">
+		<property name="eventBus">
+			<ref bean="fakeBus"/>
+		</property>
+	</bean>
+	
+	<bean id="fakeBus" class="com.linkcorp.dddcqrs.infrastructure.FakeBus"/>
+</beans>
